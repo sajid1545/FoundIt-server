@@ -1,0 +1,140 @@
+import { Prisma } from "@prisma/client";
+import { Request } from "express";
+import { paginationHelper } from "../../../helpers/paginationHelper";
+import prisma from "../../../shared/prisma";
+import { TPaginationOptions } from "../../interfaces/pagination";
+import { filterableSortBy, lostItemSearchAbleFields } from "./lostItem.constants";
+import { TLostItemsFilterRequest } from "./lostItem.interface";
+
+const createLostItem = async (req: Request & { user?: any }) => {
+	const user = req.user;
+
+	const payload = req.body;
+
+	// const file = req.file as IFile;
+
+	// if (file) {
+	// 	const uploadToCloudinary = await imageUploader.uploadToCloudinary(file);
+	// 	req.body.image = uploadToCloudinary?.secure_url;
+	// }
+
+	const result = await prisma.$transaction(async (tsx) => {
+		const userData = await tsx.user.findUniqueOrThrow({
+			where: {
+				id: user.id,
+			},
+			select: {
+				id: true,
+				name: true,
+				email: true,
+				password: false,
+				createdAt: true,
+				updatedAt: true,
+			},
+		});
+
+		const categoryData = await tsx.foundItemCategory.findUniqueOrThrow({
+			where: {
+				id: payload.categoryId,
+			},
+		});
+
+		const createLostItem = await tsx.lostItem.create({
+			data: {
+				...payload,
+				name: userData.name,
+				email: user.email,
+				userId: user.id,
+			},
+		});
+
+		const responseObject = {
+			...createLostItem,
+			user: userData,
+			category: categoryData,
+		};
+
+		return responseObject;
+	});
+
+	return result;
+};
+
+const getLostItems = async (params: TLostItemsFilterRequest, options: TPaginationOptions) => {
+	const { page, limit, skip, sortBy, sortOrder } = paginationHelper.calculatePagination(options);
+
+	let sort;
+
+	// filterableSortBy: ["foundItemName", "category"] -- sortby can be done only in these fields
+	if (filterableSortBy.map((field) => field === sortBy).includes(true)) {
+		sort = sortBy;
+	} else {
+		sort = "createdAt";
+	}
+
+	const andConditions: Prisma.FoundItemWhereInput[] = [];
+
+	const { searchTerm, ...itemsFilter } = params;
+
+	if (params.searchTerm) {
+		andConditions.push({
+			OR: lostItemSearchAbleFields.map((field) => ({
+				[field]: {
+					contains: params.searchTerm,
+					mode: "insensitive",
+				},
+			})),
+		});
+	}
+
+	if (Object.keys(itemsFilter).length > 0) {
+		andConditions.push({
+			AND: Object.keys(itemsFilter).map((key) => ({
+				[key]: {
+					equals: (itemsFilter as any)[key],
+				},
+			})),
+		});
+	}
+
+	const whereConditions: Prisma.FoundItemWhereInput =
+		andConditions.length > 0 ? { AND: andConditions } : {};
+
+	const result = await prisma.foundItem.findMany({
+		where: whereConditions,
+		include: {
+			user: {
+				select: {
+					id: true,
+					name: true,
+					email: true,
+					password: false,
+					createdAt: true,
+					updatedAt: true,
+				},
+			},
+			category: true,
+		},
+		skip,
+		take: limit,
+		orderBy: sort === "category" ? { category: { name: sortOrder as any } } : { [sort]: sortOrder },
+	});
+
+	const total = await prisma.foundItem.count({
+		where: whereConditions,
+	});
+
+	return {
+		meta: {
+			page,
+			limit,
+			total,
+		},
+		data: result,
+	};
+};
+
+export const LostItemServices = {
+	createLostItem,
+	getLostItems,
+};

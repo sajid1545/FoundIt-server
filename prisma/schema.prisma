@@ -18,6 +18,7 @@ model User {
   profile   UserProfile?
   foundItem FoundItem[]
   claim     Claim[]
+  LostItem  LostItem[]
 
   @@map("users")
 }
@@ -41,6 +42,7 @@ model FoundItemCategory {
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
   foundItem FoundItem[]
+  LostItem  LostItem[]
 
   @@map("found_item_categories")
 }
@@ -54,11 +56,37 @@ model FoundItem {
   foundItemName String
   description   String
   location      String
+  foundDate     DateTime?         @default(now())
+  image         String?           @default("https://t3.ftcdn.net/jpg/02/48/42/64/360_F_248426448_NVKLywWqArG2ADUxDq6QprtIzsF82dMF.jpg")
+  name          String?           @default("")
+  phone         String?           @default("")
+  email         String?           @default("")
   createdAt     DateTime          @default(now())
   updatedAt     DateTime          @updatedAt
   claim         Claim[]
 
   @@map("found_items")
+}
+
+model LostItem {
+  id           String            @id @default(uuid())
+  userId       String
+  user         User              @relation(fields: [userId], references: [id])
+  categoryId   String
+  category     FoundItemCategory @relation(fields: [categoryId], references: [id])
+  lostItemName String
+  description  String
+  location     String
+  lostDate     DateTime?         @default(now())
+  image        String?           @default("https://t3.ftcdn.net/jpg/02/48/42/64/360_F_248426448_NVKLywWqArG2ADUxDq6QprtIzsF82dMF.jpg")
+  name         String?           @default("")
+  phone        String?           @default("")
+  email        String?           @default("")
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  claim        Claim[]
+
+  @@map("lost_items")
 }
 
 model Claim {
@@ -72,6 +100,8 @@ model Claim {
   lostDate               DateTime
   createdAt              DateTime  @default(now())
   updatedAt              DateTime  @updatedAt
+  LostItem               LostItem? @relation(fields: [lostItemId], references: [id])
+  lostItemId             String?
 }
 
 enum Status {
