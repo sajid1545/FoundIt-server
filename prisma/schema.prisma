@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String       @id @default(uuid())
+  name      String
+  email     String       @unique
+  password  String
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  profile   UserProfile?
+  foundItem FoundItem[]
+  claim     Claim[]
+
+  @@map("users")
+}
+
+model UserProfile {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  bio       String
+  age       Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("user_profiles")
+}
+
+model FoundItemCategory {
+  id        String      @id @default(uuid())
+  name      String      @unique
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  foundItem FoundItem[]
+
+  @@map("found_item_categories")
+}
+
+model FoundItem {
+  id            String            @id @default(uuid())
+  userId        String
+  user          User              @relation(fields: [userId], references: [id])
+  categoryId    String
+  category      FoundItemCategory @relation(fields: [categoryId], references: [id])
+  foundItemName String
+  description   String
+  location      String
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  claim         Claim[]
+
+  @@map("found_items")
+}
+
+model Claim {
+  id                     String    @id @default(uuid())
+  userId                 String
+  user                   User      @relation(fields: [userId], references: [id])
+  foundItemId            String
+  foundItem              FoundItem @relation(fields: [foundItemId], references: [id])
+  status                 Status    @default(PENDING)
+  distinguishingFeatures String
+  lostDate               DateTime
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+}
+
+enum Status {
+  PENDING
+  APPROVED
+  REJECTED
+}

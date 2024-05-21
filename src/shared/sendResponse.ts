@@ -1,0 +1,27 @@
+import { Response } from "express";
+
+//  Sends a response with the provided JSON data to the client.
+const sendResponse = <T>(
+	res: Response,
+	jsonData: {
+		statusCode: number;
+		success: boolean;
+		message: string;
+		meta?: {
+			page: number;
+			limit: number;
+			total: number;
+		};
+		data: T | null | undefined;
+	}
+) => {
+	res.status(jsonData.statusCode).json({
+		success: jsonData.success,
+		statusCode: jsonData.statusCode,
+		message: jsonData.message,
+		meta: jsonData.meta || null || undefined,
+		data: jsonData.data || null || undefined,
+	});
+};
+
+export default sendResponse;
