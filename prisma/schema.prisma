@@ -12,6 +12,7 @@ model User {
   name      String
   email     String       @unique
   password  String
+  role      UserRole     @default(USER)
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
   profile   UserProfile?
@@ -24,8 +25,8 @@ model User {
 model UserProfile {
   id        String   @id @default(uuid())
   userId    String   @unique
-  bio       String
-  age       Int
+  bio       String?  @default("")
+  age       Int?     @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -77,4 +78,9 @@ enum Status {
   PENDING
   APPROVED
   REJECTED
+}
+
+enum UserRole {
+  USER
+  ADMIN
 }

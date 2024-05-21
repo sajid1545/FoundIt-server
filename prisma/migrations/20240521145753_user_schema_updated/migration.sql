@@ -1,0 +1,11 @@
+-- CreateEnum
+CREATE TYPE "UserRole" AS ENUM ('USER', 'ADMIN');
+
+-- AlterTable
+ALTER TABLE "user_profiles" ALTER COLUMN "bio" DROP NOT NULL,
+ALTER COLUMN "bio" SET DEFAULT '',
+ALTER COLUMN "age" DROP NOT NULL,
+ALTER COLUMN "age" SET DEFAULT 0;
+
+-- AlterTable
+ALTER TABLE "users" ADD COLUMN     "role" "UserRole" NOT NULL DEFAULT 'USER';
