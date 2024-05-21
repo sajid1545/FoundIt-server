@@ -11,18 +11,20 @@ const register = z.object({
 		password: z.string({
 			required_error: "Password is required",
 		}),
-		profile: z.object({
-			bio: z
-				.string({
-					required_error: "Bio is required",
-				})
-				.optional(),
-			age: z
-				.number({
-					required_error: "Age is required",
-				})
-				.optional(),
-		}),
+		profile: z
+			.object({
+				bio: z
+					.string({
+						required_error: "Bio is required",
+					})
+					.optional(),
+				age: z
+					.number({
+						required_error: "Age is required",
+					})
+					.optional(),
+			})
+			.optional(),
 	}),
 });
 

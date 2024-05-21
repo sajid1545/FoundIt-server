@@ -7,7 +7,7 @@ import prisma from "../../../shared/prisma";
 import ApiError from "../../errors/ApiError";
 
 const register = async (payload: any) => {
-	const { profile, ...userInfo } = payload;
+	const { ...userInfo } = payload;
 
 	const hashedPassword: string = await bcrypt.hash(payload.password, 10);
 
@@ -21,7 +21,6 @@ const register = async (payload: any) => {
 
 		const createdUserProfile = await tsx.userProfile.create({
 			data: {
-				...profile,
 				userId: createUserData.id,
 			},
 		});
