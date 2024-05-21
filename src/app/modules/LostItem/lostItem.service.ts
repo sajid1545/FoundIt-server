@@ -72,7 +72,7 @@ const getLostItems = async (params: TLostItemsFilterRequest, options: TPaginatio
 		sort = "createdAt";
 	}
 
-	const andConditions: Prisma.FoundItemWhereInput[] = [];
+	const andConditions: Prisma.LostItemWhereInput[] = [];
 
 	const { searchTerm, ...itemsFilter } = params;
 
@@ -97,10 +97,10 @@ const getLostItems = async (params: TLostItemsFilterRequest, options: TPaginatio
 		});
 	}
 
-	const whereConditions: Prisma.FoundItemWhereInput =
+	const whereConditions: Prisma.LostItemWhereInput =
 		andConditions.length > 0 ? { AND: andConditions } : {};
 
-	const result = await prisma.foundItem.findMany({
+	const result = await prisma.lostItem.findMany({
 		where: whereConditions,
 		include: {
 			user: {
@@ -120,7 +120,7 @@ const getLostItems = async (params: TLostItemsFilterRequest, options: TPaginatio
 		orderBy: sort === "category" ? { category: { name: sortOrder as any } } : { [sort]: sortOrder },
 	});
 
-	const total = await prisma.foundItem.count({
+	const total = await prisma.lostItem.count({
 		where: whereConditions,
 	});
 
@@ -134,7 +134,42 @@ const getLostItems = async (params: TLostItemsFilterRequest, options: TPaginatio
 	};
 };
 
+const updateLostItem = async (id: string, payload: any) => {
+	const isLostItemExists = await prisma.lostItem.findUniqueOrThrow({
+		where: {
+			id,
+		},
+	});
+
+	const result = await prisma.lostItem.update({
+		where: {
+			id,
+		},
+		data: {
+			...payload,
+		},
+	});
+	return result;
+};
+
+const deleteLostItem = async (id: string) => {
+	const isLostItemExists = await prisma.lostItem.findUniqueOrThrow({
+		where: {
+			id,
+		},
+	});
+
+	const result = await prisma.lostItem.delete({
+		where: {
+			id,
+		},
+	});
+	return result;
+};
+
 export const LostItemServices = {
 	createLostItem,
 	getLostItems,
+	updateLostItem,
+	deleteLostItem,
 };

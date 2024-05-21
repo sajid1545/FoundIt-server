@@ -7,13 +7,6 @@ import { TFoundItemsFilterRequest } from "./foundItem.interface";
 
 const createFoundItem = async (user: any, payload: any) => {
 	const result = await prisma.$transaction(async (tsx) => {
-		const createFoundItem = await tsx.foundItem.create({
-			data: {
-				...payload,
-				userId: user.id,
-			},
-		});
-
 		const userData = await tsx.user.findUniqueOrThrow({
 			where: {
 				id: user.id,
@@ -31,6 +24,14 @@ const createFoundItem = async (user: any, payload: any) => {
 		const categoryData = await tsx.foundItemCategory.findUniqueOrThrow({
 			where: {
 				id: payload.categoryId,
+			},
+		});
+		const createFoundItem = await tsx.foundItem.create({
+			data: {
+				...payload,
+				name: userData.name,
+				email: user.email,
+				userId: user.id,
 			},
 		});
 
@@ -120,7 +121,42 @@ const getFoundItems = async (params: TFoundItemsFilterRequest, options: TPaginat
 	};
 };
 
+const updateFoundItem = async (id: string, payload: any) => {
+	const isFindItemExists = await prisma.foundItem.findUniqueOrThrow({
+		where: {
+			id,
+		},
+	});
+
+	const result = await prisma.foundItem.update({
+		where: {
+			id,
+		},
+		data: {
+			...payload,
+		},
+	});
+	return result;
+};
+
+const deleteFoundItem = async (id: string) => {
+	const isFoundItemExists = await prisma.foundItem.findUniqueOrThrow({
+		where: {
+			id,
+		},
+	});
+
+	const result = await prisma.foundItem.delete({
+		where: {
+			id,
+		},
+	});
+	return result;
+};
+
 export const FoundItemServices = {
 	createFoundItem,
 	getFoundItems,
+	updateFoundItem,
+	deleteFoundItem,
 };

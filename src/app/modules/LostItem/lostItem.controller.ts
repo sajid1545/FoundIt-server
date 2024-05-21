@@ -32,7 +32,33 @@ const getLostItems = catchAsync(async (req: Request & { user?: any }, res: Respo
 	});
 });
 
+const updateLostItem = catchAsync(async (req: Request, res: Response) => {
+	const { id } = req.params;
+	const result = await LostItemServices.updateLostItem(id, req.body);
+
+	sendResponse(res, {
+		success: true,
+		statusCode: httpStatus.OK,
+		message: "Lost item updated successfully",
+		data: result,
+	});
+});
+
+const deleteLostItem = catchAsync(async (req: Request, res: Response) => {
+	const { id } = req.params;
+	const result = await LostItemServices.deleteLostItem(id);
+
+	sendResponse(res, {
+		success: true,
+		statusCode: httpStatus.OK,
+		message: "Lost item deleted successfully",
+		data: result,
+	});
+});
+
 export const LostItemControllers = {
 	createLostItem,
 	getLostItems,
+	updateLostItem,
+	deleteLostItem,
 };

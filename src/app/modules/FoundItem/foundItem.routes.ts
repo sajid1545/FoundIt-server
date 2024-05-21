@@ -13,6 +13,14 @@ router.post(
 	FoundItemControllers.createFoundItem
 );
 
+router.patch(
+	"/:id",
+	auth(),
+	validateRequest(FoundItemValidation.updateFoundItem),
+	FoundItemControllers.updateFoundItem
+);
+router.delete("/:id", auth(), FoundItemControllers.deleteFoundItem);
+
 router.get("/", FoundItemControllers.getFoundItems);
 
 export const FoundItemRoutes = router;

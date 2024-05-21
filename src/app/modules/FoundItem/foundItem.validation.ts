@@ -17,6 +17,16 @@ const createFoundItem = z.object({
 	}),
 });
 
+const updateFoundItem = z.object({
+	body: z.object({
+		categoryId: z.string().optional(),
+		lostItemName: z.string().optional(),
+		description: z.string().optional(),
+		location: z.string().optional(),
+	}),
+});
+
 export const FoundItemValidation = {
 	createFoundItem,
+	updateFoundItem,
 };
