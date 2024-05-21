@@ -13,16 +13,8 @@ const register = z.object({
 		}),
 		profile: z
 			.object({
-				bio: z
-					.string({
-						required_error: "Bio is required",
-					})
-					.optional(),
-				age: z
-					.number({
-						required_error: "Age is required",
-					})
-					.optional(),
+				bio: z.string().optional(),
+				age: z.number().optional(),
 			})
 			.optional(),
 	}),
