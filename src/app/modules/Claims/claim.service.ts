@@ -53,8 +53,34 @@ const updateClaimStatus = async (id: string, payload: any) => {
 	return result;
 };
 
+const myClaims = async (user: any) => {
+	const result = await prisma.claim.findMany({
+		where: {
+			userId: user.id,
+		},
+		include: {
+			foundItem: {
+				include: {
+					user: {
+						select: {
+							id: true,
+							email: true,
+							name: true,
+							createdAt: true,
+							updatedAt: true,
+						},
+					},
+					category: true,
+				},
+			},
+		},
+	});
+	return result;
+};
+
 export const ClaimServices = {
 	createClaim,
 	getClaims,
 	updateClaimStatus,
+	myClaims,
 };

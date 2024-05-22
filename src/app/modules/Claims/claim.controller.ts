@@ -41,8 +41,22 @@ const updateClaimStatus = catchAsync(async (req: Request & { user?: any }, res: 
 	});
 });
 
+const myClaims = catchAsync(async (req: Request & { user?: any }, res: Response) => {
+	const user = req.user;
+
+	const result = await ClaimServices.myClaims(user);
+
+	sendResponse(res, {
+		success: true,
+		statusCode: httpStatus.OK,
+		message: "My Claim fetched successfully",
+		data: result,
+	});
+});
+
 export const ClaimControllers = {
 	createClaim,
 	getClaims,
 	updateClaimStatus,
+	myClaims,
 };

@@ -63,7 +63,7 @@ model FoundItem {
   name          String?           @default("")
   phone         String?           @default("")
   email         String?           @default("")
-  status        FoundItemStatus   @default(REJECTED)
+  status        ClaimStatus       @default(PENDING)
   createdAt     DateTime          @default(now())
   updatedAt     DateTime          @updatedAt
   claim         Claim[]

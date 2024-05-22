@@ -185,10 +185,56 @@ const changeLostItemFoundStatus = async (id: string) => {
 	return result;
 };
 
+const myLostItems = async (user: any) => {
+	const result = await prisma.lostItem.findMany({
+		where: {
+			userId: user.id,
+		},
+		include: {
+			user: {
+				select: {
+					id: true,
+					name: true,
+					email: true,
+					password: false,
+					createdAt: true,
+					updatedAt: true,
+				},
+			},
+			category: true,
+		},
+	});
+	return result;
+};
+
+const getSingleLostItem = async (id: string) => {
+	const result = await prisma.lostItem.findUniqueOrThrow({
+		where: {
+			id,
+		},
+		include: {
+			user: {
+				select: {
+					id: true,
+					name: true,
+					email: true,
+					password: false,
+					createdAt: true,
+					updatedAt: true,
+				},
+			},
+			category: true,
+		},
+	});
+	return result;
+};
+
 export const LostItemServices = {
 	createLostItem,
 	getLostItems,
 	updateLostItem,
 	deleteLostItem,
 	changeLostItemFoundStatus,
+	myLostItems,
+	getSingleLostItem,
 };

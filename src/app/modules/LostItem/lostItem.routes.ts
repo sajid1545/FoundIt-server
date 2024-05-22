@@ -29,6 +29,8 @@ router.patch(
 router.put("/status/:id", auth(), LostItemControllers.changeLostItemFoundStatus);
 
 router.delete("/:id", auth(), LostItemControllers.deleteLostItem);
+router.get("/my-items", auth(), LostItemControllers.myLostItems);
+router.get("/:id", LostItemControllers.getSingleLostItem);
 
 router.get("/", LostItemControllers.getLostItems);
 

@@ -57,9 +57,34 @@ const deleteFoundItem = catchAsync(async (req: Request, res: Response) => {
 	});
 });
 
+const myFoundItems = catchAsync(async (req: Request & { user?: any }, res: Response) => {
+	const user = req.user;
+	const result = await FoundItemServices.myFoundItems(user);
+
+	sendResponse(res, {
+		success: true,
+		statusCode: httpStatus.OK,
+		message: "Your Found items fetched successfully",
+		data: result,
+	});
+});
+const getSingleFoundItem = catchAsync(async (req: Request & { user?: any }, res: Response) => {
+	const { id } = req.params;
+	const result = await FoundItemServices.getSingleFoundItem(id);
+
+	sendResponse(res, {
+		success: true,
+		statusCode: httpStatus.OK,
+		message: "Single Found item fetched successfully",
+		data: result,
+	});
+});
+
 export const FoundItemControllers = {
 	createFoundItem,
 	getFoundItems,
 	updateFoundItem,
 	deleteFoundItem,
+	myFoundItems,
+	getSingleFoundItem,
 };

@@ -7,6 +7,7 @@ import { ClaimValidation } from "./claim.validation";
 const router = express.Router();
 
 router.get("/", auth(), ClaimControllers.getClaims);
+router.get("/my-claims", auth(), ClaimControllers.myClaims);
 router.post(
 	"/",
 	auth(),

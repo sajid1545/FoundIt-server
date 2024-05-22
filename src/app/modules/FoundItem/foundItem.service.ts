@@ -101,6 +101,11 @@ const getFoundItems = async (params: TFoundItemsFilterRequest, options: TPaginat
 				},
 			},
 			category: true,
+			claim: {
+				include: {
+					user: true,
+				},
+			},
 		},
 		skip,
 		take: limit,
@@ -154,9 +159,64 @@ const deleteFoundItem = async (id: string) => {
 	return result;
 };
 
+const myFoundItems = async (user: any) => {
+	const result = await prisma.foundItem.findMany({
+		where: {
+			userId: user.id,
+		},
+		include: {
+			user: {
+				select: {
+					id: true,
+					name: true,
+					email: true,
+					password: false,
+					createdAt: true,
+					updatedAt: true,
+				},
+			},
+			category: true,
+			claim: {
+				include: {
+					user: true,
+				},
+			},
+		},
+	});
+	return result;
+};
+
+const getSingleFoundItem = async (id: string) => {
+	const result = await prisma.foundItem.findUniqueOrThrow({
+		where: {
+			id,
+		},
+		include: {
+			user: {
+				select: {
+					id: true,
+					email: true,
+					name: true,
+					createdAt: true,
+					updatedAt: true,
+				},
+			},
+			category: true,
+			claim: {
+				include: {
+					user: true,
+				},
+			},
+		},
+	});
+	return result;
+};
+
 export const FoundItemServices = {
 	createFoundItem,
 	getFoundItems,
 	updateFoundItem,
 	deleteFoundItem,
+	myFoundItems,
+	getSingleFoundItem,
 };

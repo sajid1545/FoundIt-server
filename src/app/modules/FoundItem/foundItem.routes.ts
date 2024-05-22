@@ -21,6 +21,8 @@ router.patch(
 );
 router.delete("/:id", auth(), FoundItemControllers.deleteFoundItem);
 
+router.get("/my-items", auth(), FoundItemControllers.myFoundItems);
+router.get("/:id", FoundItemControllers.getSingleFoundItem);
 router.get("/", FoundItemControllers.getFoundItems);
 
 export const FoundItemRoutes = router;
