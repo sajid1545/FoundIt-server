@@ -43,6 +43,17 @@ const updateLostItem = catchAsync(async (req: Request, res: Response) => {
 		data: result,
 	});
 });
+const changeLostItemFoundStatus = catchAsync(async (req: Request, res: Response) => {
+	const { id } = req.params;
+	const result = await LostItemServices.changeLostItemFoundStatus(id);
+
+	sendResponse(res, {
+		success: true,
+		statusCode: httpStatus.OK,
+		message: "Lost item status updated successfully",
+		data: result,
+	});
+});
 
 const deleteLostItem = catchAsync(async (req: Request, res: Response) => {
 	const { id } = req.params;
@@ -61,4 +72,5 @@ export const LostItemControllers = {
 	getLostItems,
 	updateLostItem,
 	deleteLostItem,
+	changeLostItemFoundStatus,
 };

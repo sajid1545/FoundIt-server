@@ -167,9 +167,28 @@ const deleteLostItem = async (id: string) => {
 	return result;
 };
 
+const changeLostItemFoundStatus = async (id: string) => {
+	const isLostItemExists = await prisma.lostItem.findUniqueOrThrow({
+		where: {
+			id,
+		},
+	});
+
+	const result = await prisma.lostItem.update({
+		where: {
+			id,
+		},
+		data: {
+			itemFound: !isLostItemExists.itemFound,
+		},
+	});
+	return result;
+};
+
 export const LostItemServices = {
 	createLostItem,
 	getLostItems,
 	updateLostItem,
 	deleteLostItem,
+	changeLostItemFoundStatus,
 };

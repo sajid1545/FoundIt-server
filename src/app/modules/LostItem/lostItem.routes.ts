@@ -18,14 +18,16 @@ router.post(
 
 	LostItemControllers.createLostItem
 );
+
 router.patch(
 	"/:id",
 	auth(),
-
 	validateRequest(LostItemValidation.updateLostItem),
-
 	LostItemControllers.updateLostItem
 );
+
+router.put("/status/:id", auth(), LostItemControllers.changeLostItemFoundStatus);
+
 router.delete("/:id", auth(), LostItemControllers.deleteLostItem);
 
 router.get("/", LostItemControllers.getLostItems);

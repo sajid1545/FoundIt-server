@@ -14,7 +14,18 @@ const createFoundItemCategory = catchAsync(async (req: Request & { user?: any },
 		data: result,
 	});
 });
+const getAllCategories = catchAsync(async (req: Request, res: Response) => {
+	const result = await ItemCategoryServices.getAllCategories();
+
+	sendResponse(res, {
+		success: true,
+		statusCode: httpStatus.CREATED,
+		message: "All  categories fetcher successfully",
+		data: result,
+	});
+});
 
 export const ItemCategoryControllers = {
 	createFoundItemCategory,
+	getAllCategories,
 };

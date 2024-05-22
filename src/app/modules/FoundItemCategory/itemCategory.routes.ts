@@ -13,4 +13,6 @@ router.post(
 	ItemCategoryControllers.createFoundItemCategory
 );
 
+router.get("/", ItemCategoryControllers.getAllCategories);
+
 export const ItemCategoryRoutes = router;
