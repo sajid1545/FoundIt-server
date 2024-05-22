@@ -19,7 +19,7 @@ const calculatePagination = (options: TPagination): TPaginationResult => {
 	const skip: number = (Number(page) - 1) * limit;
 
 	const sortBy: string = options.sortBy || "createdAt";
-	const sortOrder: string = options.sortOrder || "asc";
+	const sortOrder: string = options.sortOrder || "desc";
 
 	return {
 		page,

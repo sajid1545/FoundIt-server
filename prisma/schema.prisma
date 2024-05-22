@@ -14,6 +14,7 @@ model User {
   password  String
   role      UserRole     @default(USER)
   status    UserStatus   @default(ACTIVE)
+  image     String?      @default("")
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
   profile   UserProfile?
@@ -62,6 +63,7 @@ model FoundItem {
   name          String?           @default("")
   phone         String?           @default("")
   email         String?           @default("")
+  status        FoundItemStatus   @default(REJECTED)
   createdAt     DateTime          @default(now())
   updatedAt     DateTime          @updatedAt
   claim         Claim[]
@@ -92,21 +94,26 @@ model LostItem {
 }
 
 model Claim {
-  id                     String    @id @default(uuid())
+  id                     String      @id @default(uuid())
   userId                 String
-  user                   User      @relation(fields: [userId], references: [id])
+  user                   User        @relation(fields: [userId], references: [id])
   foundItemId            String
-  foundItem              FoundItem @relation(fields: [foundItemId], references: [id])
-  status                 Status    @default(PENDING)
+  foundItem              FoundItem   @relation(fields: [foundItemId], references: [id])
+  status                 ClaimStatus @default(PENDING)
   distinguishingFeatures String
   lostDate               DateTime
-  createdAt              DateTime  @default(now())
-  updatedAt              DateTime  @updatedAt
-  LostItem               LostItem? @relation(fields: [lostItemId], references: [id])
+  createdAt              DateTime    @default(now())
+  updatedAt              DateTime    @updatedAt
+  LostItem               LostItem?   @relation(fields: [lostItemId], references: [id])
   lostItemId             String?
 }
 
-enum Status {
+enum FoundItemStatus {
+  APPROVED
+  REJECTED
+}
+
+enum ClaimStatus {
   PENDING
   APPROVED
   REJECTED

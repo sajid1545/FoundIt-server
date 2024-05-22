@@ -1,3 +1,4 @@
+import { UserStatus } from "@prisma/client";
 import bcrypt from "bcrypt";
 import httpStatus from "http-status";
 import { Secret } from "jsonwebtoken";
@@ -83,7 +84,38 @@ const login = async (payload: { email: string; password: string }) => {
 	};
 };
 
+const changePassword = async (user: any, payload: any) => {
+	const userData = await prisma.user.findUniqueOrThrow({
+		where: {
+			email: user.email,
+			status: UserStatus.ACTIVE,
+		},
+	});
+
+	const isCorrectPassword = await bcrypt.compare(payload.currentPassword, userData.password);
+
+	if (!isCorrectPassword) {
+		throw new ApiError(httpStatus.UNAUTHORIZED, "Incorrect password");
+	}
+
+	const hashedPassword = await bcrypt.hash(payload.newPassword, 10);
+
+	await prisma.user.update({
+		where: {
+			email: userData.email,
+		},
+		data: {
+			password: hashedPassword,
+		},
+	});
+
+	return {
+		message: "Password changed successfully",
+	};
+};
+
 export const AuthServices = {
 	register,
 	login,
+	changePassword,
 };

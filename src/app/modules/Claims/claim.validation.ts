@@ -1,4 +1,4 @@
-import { Status } from "@prisma/client";
+import { ClaimStatus } from "@prisma/client";
 import { z } from "zod";
 
 const createClaim = z.object({
@@ -17,7 +17,7 @@ const createClaim = z.object({
 
 const updateClaimStatus = z.object({
 	body: z.object({
-		status: z.enum([Status.APPROVED, Status.PENDING, Status.REJECTED]).optional(),
+		status: z.enum([ClaimStatus.APPROVED, ClaimStatus.PENDING, ClaimStatus.REJECTED]).optional(),
 	}),
 });
 
