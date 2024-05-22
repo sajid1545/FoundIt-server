@@ -88,7 +88,6 @@ model LostItem {
   itemFound    Boolean           @default(false)
   createdAt    DateTime          @default(now())
   updatedAt    DateTime          @updatedAt
-  claim        Claim[]
 
   @@map("lost_items")
 }
@@ -104,8 +103,6 @@ model Claim {
   lostDate               DateTime
   createdAt              DateTime    @default(now())
   updatedAt              DateTime    @updatedAt
-  LostItem               LostItem?   @relation(fields: [lostItemId], references: [id])
-  lostItemId             String?
 }
 
 enum FoundItemStatus {

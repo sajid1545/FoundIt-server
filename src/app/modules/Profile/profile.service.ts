@@ -12,6 +12,7 @@ const getProfile = async (user: any) => {
 					name: true,
 					email: true,
 					image: true,
+					role: true,
 					status: true,
 					createdAt: true,
 					updatedAt: true,

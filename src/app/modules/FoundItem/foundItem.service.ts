@@ -151,11 +151,22 @@ const deleteFoundItem = async (id: string) => {
 		},
 	});
 
-	const result = await prisma.foundItem.delete({
-		where: {
-			id,
-		},
+	const result = await prisma.$transaction(async (tsx) => {
+		const deleteClaim = await tsx.claim.deleteMany({
+			where: {
+				foundItemId: id,
+			},
+		});
+
+		const result = await prisma.foundItem.delete({
+			where: {
+				id,
+			},
+		});
+
+		return result;
 	});
+
 	return result;
 };
 
