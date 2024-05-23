@@ -78,9 +78,35 @@ const myClaims = async (user: any) => {
 	return result;
 };
 
+const getSingleClaim = async (id: string) => {
+	const result = await prisma.claim.findUniqueOrThrow({
+		where: {
+			id,
+		},
+		include: {
+			foundItem: {
+				include: {
+					user: {
+						select: {
+							id: true,
+							email: true,
+							name: true,
+							createdAt: true,
+							updatedAt: true,
+						},
+					},
+					category: true,
+				},
+			},
+		},
+	});
+	return result;
+};
+
 export const ClaimServices = {
 	createClaim,
 	getClaims,
 	updateClaimStatus,
 	myClaims,
+	getSingleClaim,
 };

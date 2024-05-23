@@ -15,6 +15,7 @@ router.post(
 	validateRequest(ClaimValidation.createClaim),
 	ClaimControllers.createClaim
 );
+router.get("/:claimId", auth(UserRole.ADMIN, UserRole.USER), ClaimControllers.getSingleClaim);
 router.put(
 	"/:claimId",
 	auth(UserRole.ADMIN, UserRole.USER),
