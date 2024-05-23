@@ -74,6 +74,28 @@ const getFoundItems = async (params: TFoundItemsFilterRequest, options: TPaginat
 		});
 	}
 
+	// filter by category
+	let categoryFilter = "";
+
+	if ((itemsFilter as any).category) {
+		categoryFilter = (itemsFilter as any).category;
+	}
+
+	const ss = Object.keys(itemsFilter);
+
+	if (ss.length > 0 && ss.includes("category")) {
+		andConditions.push({
+			category: {
+				name: {
+					contains: categoryFilter,
+					mode: "insensitive",
+				},
+			},
+		});
+	}
+
+	delete (itemsFilter as any).category;
+
 	if (Object.keys(itemsFilter).length > 0) {
 		andConditions.push({
 			AND: Object.keys(itemsFilter).map((key) => ({

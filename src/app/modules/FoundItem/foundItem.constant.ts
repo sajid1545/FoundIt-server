@@ -1,4 +1,4 @@
-export const foundItemFilterableFields = ["foundItemName", "searchTerm"];
+export const foundItemFilterableFields = ["foundItemName", "searchTerm", "category"];
 
 export const foundItemSearchAbleFields = ["foundItemName", "location", "description"];
 
