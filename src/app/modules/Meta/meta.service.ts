@@ -16,6 +16,11 @@ const fetchDashboardMetaData = async (user: any) => {
 		},
 	});
 	const totalCategoriesCount = await prisma.foundItemCategory.count();
+	const totalAdminCount = await prisma.user.count({
+		where: {
+			role: "ADMIN",
+		},
+	});
 
 	const result = {
 		totalUsersCount,
@@ -25,6 +30,7 @@ const fetchDashboardMetaData = async (user: any) => {
 		claimsCount,
 		totalApprovedClaims,
 		totalCategoriesCount,
+		totalAdminCount,
 	};
 	return result;
 };
