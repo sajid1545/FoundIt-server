@@ -22,6 +22,12 @@ const fetchDashboardMetaData = async (user: any) => {
 		},
 	});
 
+	const foundLostItemsCount = await prisma.lostItem.count({
+		where: {
+			itemFound: true,
+		},
+	});
+
 	const result = {
 		totalUsersCount,
 		totalActiveUsersCount,
@@ -31,6 +37,7 @@ const fetchDashboardMetaData = async (user: any) => {
 		totalApprovedClaims,
 		totalCategoriesCount,
 		totalAdminCount,
+		foundLostItemsCount,
 	};
 	return result;
 };
