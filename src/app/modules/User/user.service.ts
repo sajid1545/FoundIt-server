@@ -1,5 +1,10 @@
 import prisma from "../../../shared/prisma";
 
+const getAllUsers = async () => {
+	const result = await prisma.user.findMany();
+	return result;
+};
+
 const updateUserStatus = async (id: string, payload: any) => {
 	const ifUserExists = await prisma.user.findUniqueOrThrow({
 		where: {
@@ -20,4 +25,5 @@ const updateUserStatus = async (id: string, payload: any) => {
 
 export const UserServices = {
 	updateUserStatus,
+	getAllUsers,
 };
