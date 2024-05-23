@@ -1,3 +1,4 @@
+import { UserRole } from "@prisma/client";
 import express from "express";
 import auth from "../../middlewares/auth";
 import validateRequest from "../../middlewares/validateRequest";
@@ -6,11 +7,11 @@ import { ProfileValidation } from "./profile.validation";
 
 const router = express.Router();
 
-router.get("/", auth(), ProfileControllers.getProfile);
+router.get("/", auth(UserRole.ADMIN, UserRole.USER), ProfileControllers.getProfile);
 
 router.put(
 	"/",
-	auth(),
+	auth(UserRole.ADMIN, UserRole.USER),
 	validateRequest(ProfileValidation.updateProfile),
 	ProfileControllers.updateProfile
 );

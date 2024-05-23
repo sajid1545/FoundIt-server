@@ -1,3 +1,4 @@
+import { UserRole } from "@prisma/client";
 import express from "express";
 import auth from "../../middlewares/auth";
 import validateRequest from "../../middlewares/validateRequest";
@@ -6,17 +7,17 @@ import { ClaimValidation } from "./claim.validation";
 
 const router = express.Router();
 
-router.get("/", auth(), ClaimControllers.getClaims);
-router.get("/my-claims", auth(), ClaimControllers.myClaims);
+router.get("/", auth(UserRole.ADMIN, UserRole.USER), ClaimControllers.getClaims);
+router.get("/my-claims", auth(UserRole.ADMIN, UserRole.USER), ClaimControllers.myClaims);
 router.post(
 	"/",
-	auth(),
+	auth(UserRole.ADMIN, UserRole.USER),
 	validateRequest(ClaimValidation.createClaim),
 	ClaimControllers.createClaim
 );
 router.put(
 	"/:claimId",
-	auth(),
+	auth(UserRole.ADMIN, UserRole.USER),
 	validateRequest(ClaimValidation.updateClaimStatus),
 	ClaimControllers.updateClaimStatus
 );

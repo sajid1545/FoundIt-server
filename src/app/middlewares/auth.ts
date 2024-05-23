@@ -5,7 +5,7 @@ import config from "../../config";
 import { jwtHelpers } from "../../helpers/jwtHelpers";
 import ApiError from "../errors/ApiError";
 
-const auth = () => {
+const auth = (...roles: string[]) => {
 	return async (req: Request & { user?: any }, res: Response, next: NextFunction) => {
 		try {
 			const token = req.headers.authorization;
@@ -14,9 +14,13 @@ const auth = () => {
 				throw new ApiError(httpStatus.UNAUTHORIZED, "Authorization token not found");
 			}
 
-			const decoded = jwtHelpers.verifyToken(token, config.jwt.jwt_secret as Secret);
+			const verifiedUser: any = jwtHelpers.verifyToken(token, config.jwt.jwt_secret as Secret);
 
-			req.user = decoded;
+			req.user = verifiedUser;
+
+			if (roles.length && !roles.includes(verifiedUser?.role as string)) {
+				throw new ApiError(httpStatus.FORBIDDEN, "Forbidden!");
+			}
 
 			next();
 		} catch (error) {
