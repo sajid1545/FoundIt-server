@@ -24,7 +24,7 @@ const getProfile = async (user: any) => {
 };
 
 const updateProfile = async (user: any, payload: any) => {
-	const { email, ...userInfo } = payload;
+	const { email, name, ...userInfo } = payload;
 
 	const result = await prisma.$transaction(async (tsx) => {
 		const userData = await tsx.user.findUniqueOrThrow({
@@ -46,6 +46,7 @@ const updateProfile = async (user: any, payload: any) => {
 				id: user.id,
 			},
 			data: {
+				name,
 				email,
 			},
 		});
