@@ -54,6 +54,7 @@ const updateClaimStatus = async (id: string, payload: any) => {
 };
 
 const myClaims = async (user: any) => {
+	console.log("🚀 ~ myClaims ~ user:", user);
 	const result = await prisma.claim.findMany({
 		where: {
 			userId: user.id,
@@ -66,11 +67,18 @@ const myClaims = async (user: any) => {
 							id: true,
 							email: true,
 							name: true,
-							createdAt: true,
-							updatedAt: true,
 						},
 					},
 					category: true,
+				},
+			},
+			user: {
+				select: {
+					id: true,
+					email: true,
+					name: true,
+					createdAt: true,
+					updatedAt: true,
 				},
 			},
 		},
