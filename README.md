@@ -9,11 +9,17 @@ Found items , and users data are stored in PostgresSQL. In this project [Prisma]
 - After user login, access token is generated and assigned to the user.
 - While registering, users are required to provide a unique email.
 - The system ensures that a user can only register once.
-- User can report found items, and claim found items.
+- User can report found items, lost items and claim found items.
 - User can view reported items and can filter them to view specific items based on their needs.
 - Use can view my profile. In order to view my profile, user must be logged in. User is taken from the access token that was assigned to the user during login.
 - User can update their profile.
+- User change their password.
+- There are two types of role ADMIN & USER.
+- Admin can view all users and activate or deactivate users.
+- Admin can view all meta information including total number of users, total number of lost items, total number of found items, total number of claim requests, total number of claim approved, total number of claim rejected.
 - Several routes require access token to be viewed, if token is not provided, an error will be shown.
+- There are some routes that only can be accessed by admin.
+- `auth` middleware is used for authentication and authorization .
 - In this project error is handled by creating `global error handler` middleware.
 - For zod errors, error response is customized.
 - While registering user data is saved in User table and UserProfile table. This was achieved using Prisma (transaction).
@@ -36,8 +42,6 @@ Found items , and users data are stored in PostgresSQL. In this project [Prisma]
 - [http status](https://www.npmjs.com/package/http-status) - Utility to interact with HTTP status codes.
 - [Vercel](https://vercel.com/) - (Vercel) Serverless platform for hosting Node.js applications
 - [Supabase](https://supabase.com/) - Open source Firebase alternative, for hosting PostgresSQL database
-
-# [Deployed Server Link](https://assignment-8-self.vercel.app/)
 
 # Run Locally
 
@@ -69,3 +73,5 @@ yarn dev
 
 <br>
 <br>
+
+# [Deployed Server Link](https://assignment-9-server-delta.vercel.app/)
